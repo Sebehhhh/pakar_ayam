@@ -1,1 +1,0 @@
-# pakar_ayam
