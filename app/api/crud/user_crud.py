@@ -1,7 +1,25 @@
-# app/api/crud/user_crud.py
 from sqlalchemy.orm import Session
-from typing import List
 from app.models.user import User
+from app.models.role import Role
 
-def get_users(db: Session, skip: int = 0, limit: int = 10) -> List[User]:
-    return db.query(User).offset(skip).limit(limit).all()
+def get_users_with_roles(db: Session, skip: int = 0, limit: int = 10):
+    query = (
+        db.query(User.id, User.nama, User.username, User.password, User.role_id, Role.role)
+        .join(Role, User.role_id == Role.id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+    
+    users_with_roles = [
+        {
+            'id': user.id,
+            'nama': user.nama,
+            'username': user.username,
+            'password': user.password,
+            'role_id': user.role_id,
+            'role': user.role
+        } for user in query
+    ]
+    
+    return users_with_roles
