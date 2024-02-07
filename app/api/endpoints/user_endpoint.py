@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
 from app.models.role import Role
-from app.api.crud.user_crud import get_users_with_roles, create_user, get_user
+from app.api.crud.user_crud import delete_user, get_users_with_roles, create_user, get_user
 from app.db.session import get_db
 from passlib.hash import bcrypt
 
@@ -81,3 +81,16 @@ def update_user_endpoint(user_id: int, user_data: dict, db: Session = Depends(ge
         'password': db_user.password,  # Mengembalikan password tidak di-hash
         'role_id': db_user.role_id,
     }
+
+@router.delete("/users/{user_id}")
+def delete_user_endpoint(user_id: int, db: Session = Depends(get_db)):
+    # Cari pengguna berdasarkan ID
+    db_user = get_user(db, user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Hapus pengguna dari basis data menggunakan fungsi CRUD
+    delete_user(db, user_id)
+
+    # Kembalikan respons sukses
+    return {"message": "User deleted successfully"}

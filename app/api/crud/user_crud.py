@@ -33,3 +33,13 @@ def create_user(db: Session, user_data: dict):
 
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
+
+def delete_user(db: Session, user_id: int):
+    # Cari pengguna berdasarkan ID
+    user_to_delete = db.query(User).filter(User.id == user_id).first()
+    if user_to_delete:
+        # Hapus pengguna dari basis data
+        db.delete(user_to_delete)
+        db.commit()
+        return True
+    return False

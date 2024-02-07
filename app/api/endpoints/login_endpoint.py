@@ -6,6 +6,7 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.db.session import get_db
+
 router = APIRouter()
 
 SECRET_KEY = "b3ab79078239b2f1f64bf3d19d8a29fbc82bd9691c203d76da2888b290774972" 
@@ -29,7 +30,7 @@ def create_access_token(data: dict, expires_delta: timedelta):
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not verify_password(form_data.password, user.password):
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+        raise HTTPException(status_code=401, detail={"message": "Nama pengguna atau kata sandi salah"})
     
     # Buat token akses
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -37,5 +38,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer", "user_id": user.id}
+
+
+
 
 
