@@ -1,7 +1,7 @@
- 
 # app/main.py
 from fastapi import FastAPI
 from app.api.endpoints import login_endpoint, user_endpoint, role_endpoint, post_endpoint, hasil_endpoint, gejala_endpoint, penyakit_endpoint, basis_pengetahuan_endpoint, kondisi_endpoint
+
 
 app = FastAPI()
 
