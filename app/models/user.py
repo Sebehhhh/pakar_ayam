@@ -7,3 +7,4 @@ class User(SQLModel, table=True):
     password: str
     nama: str
     role_id: int
+

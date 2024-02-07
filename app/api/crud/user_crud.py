@@ -23,3 +23,10 @@ def get_users_with_roles(db: Session, skip: int = 0, limit: int = 10):
     ]
     
     return users_with_roles
+
+def create_user(db: Session, user_data: dict):
+    db_user = User(**user_data)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
